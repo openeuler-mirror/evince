@@ -1,0 +1,76 @@
+--- evince-3.21.92/browser-plugin/EvBrowserPluginMain.cpp
++++ evince-3.21.92/browser-plugin/EvBrowserPluginMain.cpp
+@@ -38,11 +38,40 @@ static EvBrowserPlugin *pluginForInstanc
+         return static_cast<EvBrowserPlugin *>(instance->pdata);
+ }
+ 
++static gboolean gtkToolkitIsCompatible(NPP instance)
++{
++        NPNToolkitType toolkit_type = NPNVGtk12;
++        NPError error;
++
++        error = browser->getvalue(instance, NPNVToolkit, &toolkit_type);
++
++        if (error == NPERR_NO_ERROR &&
++            (toolkit_type == NPNVGtk12 ||
++             toolkit_type == NPNVGtk2))
++                return FALSE;
++        else
++                return TRUE;
++}
++
+ NPError NPP_New(NPMIMEType pluginType, NPP instance, uint16_t mode, int16_t argc, char *argn[], char *argv[], NPSavedData *savedData)
+ {
+         if (!instance)
+                 return NPERR_INVALID_INSTANCE_ERROR;
+ 
++        if (!gtkToolkitIsCompatible(instance))
++                return NPERR_GENERIC_ERROR;
++
++        GBytes *resourceData = g_resources_lookup_data("/org/gnome/evince/browser/ui/evince-browser.css", G_RESOURCE_LOOKUP_FLAGS_NONE, nullptr);
++        if (resourceData) {
++            GtkCssProvider *cssProvider = gtk_css_provider_new();
++
++            gtk_css_provider_load_from_data(cssProvider, static_cast<const gchar *>(g_bytes_get_data(resourceData, nullptr)), g_bytes_get_size(resourceData), nullptr);
++            g_bytes_unref(resourceData);
++
++            gtk_style_context_add_provider_for_screen(gdk_screen_get_default(), GTK_STYLE_PROVIDER(cssProvider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
++            g_object_unref(cssProvider);
++        }
++
+         return EvBrowserPlugin::create(instance)->initialize(pluginType, mode, argc, argn, argv, savedData);
+ }
+ 
+@@ -197,6 +226,11 @@ NPError NP_Initialize(NPNetscapeFuncs *b
+         if ((browserFuncs->version >> 8) > NP_VERSION_MAJOR)
+                 return NPERR_INCOMPATIBLE_VERSION_ERROR;
+ 
++        browser = browserFuncs;
++
++        if (!gtkToolkitIsCompatible(NULL))
++                return NPERR_GENERIC_ERROR;
++
+         if (!ev_init())
+                 return NPERR_GENERIC_ERROR;
+ 
+@@ -207,20 +241,8 @@ NPError NP_Initialize(NPNetscapeFuncs *b
+                 return NPERR_GENERIC_ERROR;
+ #endif
+ 
+-        browser = browserFuncs;
+         initializePluginFuncs(pluginFuncs);
+ 
+-        GBytes *resourceData = g_resources_lookup_data("/org/gnome/evince/browser/ui/evince-browser.css", G_RESOURCE_LOOKUP_FLAGS_NONE, nullptr);
+-        if (resourceData) {
+-            GtkCssProvider *cssProvider = gtk_css_provider_new();
+-
+-            gtk_css_provider_load_from_data(cssProvider, static_cast<const gchar *>(g_bytes_get_data(resourceData, nullptr)), g_bytes_get_size(resourceData), nullptr);
+-            g_bytes_unref(resourceData);
+-
+-            gtk_style_context_add_provider_for_screen(gdk_screen_get_default(), GTK_STYLE_PROVIDER(cssProvider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+-            g_object_unref(cssProvider);
+-        }
+-
+         return NPERR_NO_ERROR;
+ }
+ 
