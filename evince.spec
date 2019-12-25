@@ -34,7 +34,7 @@ backend development.
 
 %package        help
 Summary:        Help documents for evince
-%description    
+%description    help 
 This package contain the help documents for evince.
 
 %prep
