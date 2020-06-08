@@ -1,6 +1,6 @@
 Name:           evince
 Version:        3.30.1
-Release:        3
+Release:        4
 Summary:        Document viewer for multiple document formats
 License:        GPLv2+ and GPLv3+ and LGPLv2+ and MIT and Afmparse
 URL:            https://wiki.gnome.org/Apps/Evince
@@ -45,7 +45,7 @@ export SYNCTEX_CFLAGS=-I/usr/include/synctex
 autoreconf -f -i
 %configure --disable-static --enable-introspection --enable-comics=yes --enable-dvi=yes \
            --enable-libgnome-desktop --enable-xps=yes --enable-t1lib=no --enable-ps=yes
-%make_build V=1 LIBTOOL=/usr/bin/libtool
+%make_build V=1 
 
 %install
 %make_install
@@ -102,5 +102,7 @@ desktop-file-validate $RPM_BUILD_ROOT%{_datadir}/applications/org.gnome.Evince-p
 
 
 %changelog
+* Mon Jun 8 2020 yanan li <liyanan032@huawei.com> - 3.30.1-4
+- Disable designated LIBTOOL directory in %make_build 
 * Mon Dec 2 2019 chenzhenyu <chenzhenyu13@huawei.com> - 3.30.1-3
 - Package init
