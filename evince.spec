@@ -103,6 +103,7 @@ desktop-file-validate $RPM_BUILD_ROOT%{_datadir}/applications/org.gnome.Evince-p
 
 %changelog
 * Mon Jun 8 2020 yanan li <liyanan032@huawei.com> - 3.30.1-4
-- Disable designated LIBTOOL directory in %make_build 
+- Disable designated LIBTOOL directory in %make_build
+ 
 * Mon Dec 2 2019 chenzhenyu <chenzhenyu13@huawei.com> - 3.30.1-3
 - Package init
