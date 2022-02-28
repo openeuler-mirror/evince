@@ -1,12 +1,13 @@
 Name:           evince
 Version:        3.30.1
-Release:        3
+Release:        4
 Summary:        Document viewer for multiple document formats
 License:        GPLv2+ and GPLv3+ and LGPLv2+ and MIT and Afmparse
 URL:            https://wiki.gnome.org/Apps/Evince
 Source0:        https://download.gnome.org/sources/%{name}/3.30/%{name}-%{version}.tar.xz
 Patch0:         evince-3.21.4-NPNVToolKit.patch
 Patch1:         0001-Resolves-deb-762530-rhbz-1061177-add-man-pages.patch
+Patch2:         CVE-2019-11459.patch
 
 BuildRequires:  pkgconfig(gio-unix-2.0) >= 2.36.0 pkgconfig(gtk+-x11-3.0) >= 3.16.0 pkgconfig(gnome-desktop-3.0)
 BuildRequires:  pkgconfig(poppler-glib) >= 0.24.0 pkgconfig(libgxps) >= 0.2.1       pkgconfig(gobject-introspection-1.0)
@@ -102,5 +103,8 @@ desktop-file-validate $RPM_BUILD_ROOT%{_datadir}/applications/org.gnome.Evince-p
 
 
 %changelog
+* Sat Feb 26 2022 yaoxin <yaoxin30@huawei.com> - 3.30.1-4
+- Fix CVE-2019-11459
+
 * Mon Dec 2 2019 chenzhenyu <chenzhenyu13@huawei.com> - 3.30.1-3
 - Package init
