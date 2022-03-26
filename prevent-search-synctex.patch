@@ -1,0 +1,13 @@
+diff --color -urN evince-3.38.2/meson.build evince-3.38.2-new/meson.build
+--- evince-3.38.2/meson.build	2021-02-14 11:36:17.394986600 +0800
++++ evince-3.38.2-new/meson.build	2022-03-27 03:47:40.841677626 +0800
+@@ -249,8 +249,7 @@
+ config_h.set('HAVE_DESKTOP_SCHEMAS', gsettings_desktop_schemas_dep.found())
+ 
+ # *** libsynctex ***
+-synctex_dep = dependency('synctex', version: '>= 1.19', required: false)
+-external_synctex = synctex_dep.found()
++external_synctex = false
+ 
+ # *** Mime types list ***
+ mime_types_list = {
