@@ -1,11 +1,14 @@
 Name:           evince
 Version:        3.38.2
-Release:        1
+Release:        2
 Summary:        Document viewer for multiple document formats
 License:        GPLv2+ and GPLv3+ and LGPLv2+ and MIT and Afmparse
 URL:            https://wiki.gnome.org/Apps/Evince
 Source0:        https://download.gnome.org/sources/%{name}/3.38/%{name}-%{version}.tar.xz
 Patch0:         evince-3.21.4-NPNVToolKit.patch
+%ifarch riscv64
+Patch1:         prevent-search-synctex.patch
+%endif
 
 BuildRequires:  pkgconfig(gio-unix-2.0) >= 2.36.0 pkgconfig(gtk+-x11-3.0) >= 3.16.0 pkgconfig(gnome-desktop-3.0)
 BuildRequires:  pkgconfig(poppler-glib) >= 0.33.0 pkgconfig(libgxps) >= 0.2.1       pkgconfig(gobject-introspection-1.0)
@@ -103,6 +106,9 @@ desktop-file-validate $RPM_BUILD_ROOT%{_datadir}/applications/org.gnome.Evince-p
 
 
 %changelog
+* Sun Mar 27 2022 YukariChiba <i@0x7f.cc> - 3.38.2-2
+- Use internal synctex instead
+
 * Tue Jun 15 2021 weijin deng <weijin.deng@turbolinux.com.cn> - 3.38.2-1
 - Upgrade to 3.38.2
 - Delete 0001-Resolves-deb-762530-rhbz-1061177-add-man-pages.patch that
